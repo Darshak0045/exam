@@ -1,0 +1,308 @@
+user:-
+
+
+<?php
+$con= new mysqli('localhost','root','','crud');
+if(isset($_POST['submit'])){
+$name=$_POST['name'];
+$email=$_POST['email'];
+$mobile=$_POST['mobile'];
+$password=$_POST['password'];
+//insert query
+$sql = "INSERT INTO trycrud( name, email, mobile, password )
+VALUES( '$name', '$email','$mobile', '$password' )";
+//execute query
+$result=mysqli_query($con,$sql);
+// we will check 
+if($result) {
+echo "data inserted successfully";
+header('Location:display.php');
+}else{
+die(mysqli_error($con));
+}
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Crud</title>
+</head>
+<body>
+<form method="Post">
+    <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Name</label>
+        <input type="text" class="form-control" name="name" placeholder="Enter Your Name" id="exampleInputEmail1" aria-describedby="emailHelp">
+    </div>
+
+    <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Email</label>
+        <input type="email" class="form-control" name="email" placeholder="Enter Your Email" id="exampleInputEmail1" aria-describedby="emailHelp">
+    </div>
+
+    <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Mobile Number</label>
+        <input type="text" class="form-control" name="mobile" placeholder="Enter Your Mobile Number" id="exampleInputEmail1" aria-describedby="emailHelp">
+    </div>
+
+    <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Password</label>
+        <input type="password" class="form-control" name="password" id="exampleInputEmail1" aria-describedby="emailHelp">
+    </div>
+
+ 
+  <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+</form>
+</body>
+</html>
+
+
+
+display:-
+
+
+
+<?php
+$con= new mysqli('localhost','root','','crud');
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Display</title>
+</head>
+<body>
+<div class="container">
+<button type="button" class="btn btn-success my-5 "><a href="user.php">Add User</a></button>
+<table class="table table-dark">
+<thead>
+<tr>
+<th scope="col">Sr.no</th>
+<th scope="col">Name</th>
+<th scope="col">Email</th>
+<th scope="col">Mobile </th>
+<th scope="col">Password</th>
+<th scope="col">Operation</th>
+</tr>
+</thead>
+<?php
+    $sql="Select * from trycrud";
+    $result=mysqli_query($con,$sql);
+    if ($result){
+    //step 1
+    // $row=mysqli_fetch_array($result);
+    // echo $row['name'];
+    while ($row=mysqli_fetch_array($result))
+    {
+    $id=$row['id'];
+    $name=$row['name'];
+    $email=$row['email'];
+    $mobile=$row['mobile'];
+    $password=$row['password'];
+    echo'<tr>
+    <th scope="row">'.$id.'</th>
+    <td>'.$name.'</td>
+    <td >'.$email.'</td>
+    <td>'.$mobile.'</td>
+    <td>'.$password.'</td>
+    <td>
+    <button type="button" class="btn btn-success my-5"><a 
+    href="update.php?updateid='.$id.'">update</a></button>
+    <button type="button" class="btn btn-danger my-5"><a 
+    href="delete.php?deleteid='.$id.'">delete</a></button>
+    </td>
+    </tr>
+    <tr>';
+    }
+    }
+?>
+</table>
+</div>
+
+</body>
+</html>
+
+
+
+Update:-
+
+
+
+
+<?php
+$con= new mysqli('localhost','root','','crud');
+$id = $_GET['updateid'];
+if(isset($_POST['submit'])){
+$name=$_POST['name'];
+$email=$_POST['email'];
+$mobile=$_POST['mobile'];
+$password=$_POST['password'];
+$sql="update trycrud set name='$name', email='$email', mobile='$mobile', 
+password='$password' where id=$id";
+$result=mysqli_query($con,$sql);
+if($result) {
+echo "updated successfully ";
+header('Location:display.php');
+}else{
+die(mysqli_error($con));
+}
+}
+$sql="Select * from trycrud";
+$result=mysqli_query($con,$sql);
+$row=mysqli_fetch_array($result);
+$name=$row['name'];
+$email=$row['email'];
+$mobile=$row['mobile'];
+$password=$row['password'];
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Delete</title>
+</head>
+<body>
+<div class="container">
+    <form method="post">
+            <div class="mb-3">
+                <label> Name </label>
+                <input type="text" class="form-control" name="name" value=<?php echo "$name";?> >
+                </div>
+            <div class="mb-3">
+                <label> Email </label>
+                <input type="email" class="form-control" name="email" value=<?php echo "$email";?> >
+            </div>
+
+
+            <div class="mb-3">
+            <label> Mobile Number </label>
+            <input type="text" class="form-control" name="mobile" value=<?php echo "$mobile";?>
+            >
+        </div>
+
+
+        <div class="mb-3">
+            <label>Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1"
+            name="password" value=<?php echo "$password";?> >
+        </div>
+
+           <button type="submit" class="btn btn-primary" name="submit">Submit</button>
+    </form>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+delete:-
+
+
+
+
+<?php
+$con= new mysqli('localhost','root','','crud');
+if(isset($_GET['deleteid'])){
+$id=$_GET['deleteid'];
+//insert query
+$sql = "delete from trycrud where id=$id";
+//execute query
+$result=mysqli_query($con,$sql);
+// we will check 
+if($result) {
+echo "deleted successfully";
+header('Location:display.php');
+}else{
+die(mysqli_error($con));
+}
+}
+?>
+
+
+
+
+asp
+
+
+
+
+Imports System.Data.SqlClient
+Imports System.Data
+
+
+Public Class WebForm1
+    Inherits System.Web.UI.Page
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+    End Sub
+
+    Protected Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim con As New SqlConnection
+        Dim cmd As New SqlCommand
+        con.ConnectionString = "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=98;Integrated Security=True"
+        con.Open()
+        cmd = New SqlCommand("INSERT INTO tybca98 values('" & TextBox1.Text & "', '" & TextBox2.Text & "','" & TextBox3.Text & "', '" & TextBox4.Text & "')", con)
+        cmd.ExecuteNonQuery()
+        con.Close()
+        MsgBox("data inserted successfully")
+
+
+    End Sub
+
+    Protected Sub TextBox3_TextChanged(sender As Object, e As EventArgs) Handles TextBox3.TextChanged
+
+    End Sub
+
+    Protected Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        Dim con As New SqlConnection
+        Dim cmd As New SqlCommand
+        con.ConnectionString = "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=98;Integrated Security=True"
+        cmd.Connection = con
+        con.Open()
+        cmd.CommandText = "delete from tybca98 where id= '" & textbox5.Text & "'"
+
+        cmd.ExecuteNonQuery()
+        MsgBox("record deletd successfuly")
+        TextBox1.Text = ""
+        TextBox2.Text = ""
+        TextBox3.Text = ""
+        TextBox4.Text = ""
+        TextBox5.Text = ""
+    End Sub
+
+    Protected Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        Dim con As New SqlConnection
+        Dim cmd As New SqlCommand
+        Dim dr As SqlDataReader
+        con.ConnectionString = "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=98;Integrated Security=True"
+        con.Open()
+        cmd = New SqlCommand("select * from tybca98 where id= '" + TextBox5.Text + "'", con)
+        dr = cmd.ExecuteReader
+        If dr.Read Then
+            TextBox1.Text = dr.GetValue(0)
+            TextBox2.Text = dr.GetValue(1)
+            TextBox3.Text = dr.GetValue(2)
+            TextBox4.Text = dr.GetValue(3)
+
+        Else
+            MsgBox("record not found!!!!")
+        End If
+        con.Close()
+    End Sub
+End Class
+
+
+
