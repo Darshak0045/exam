@@ -1,0 +1,65 @@
+insert 
+
+Protected Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim con As New SqlConnection
+        Dim cmd As New SqlCommand
+        con.ConnectionString = "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=tray;Integrated Security=True"
+        con.Open()
+        cmd = New SqlCommand("INSERT INTO crud VALUES('" & TextBox1.Text & "', '" & TextBox2.Text & "', '" & TextBox3.Text & "', '" & TextBox4.Text & "')", con)
+        cmd.ExecuteNonQuery()
+        con.Close()
+        MsgBox("data inserted successfully")
+
+    End Sub
+
+
+display
+
+Protected Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        Dim con As New SqlConnection
+        Dim cmd As New SqlCommand
+        con.ConnectionString = "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=tray;Integrated Security=True"
+        con.Open()
+        cmd.CommandText = "SELECT * FROM crud"
+        cmd.Connection = con
+        GridView1.DataSource = cmd.ExecuteReader
+        GridView1.DataBind()
+        con.Close()
+
+    End Sub
+
+update
+
+Protected Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        Dim con As New SqlConnection
+        Dim cmd As New SqlCommand
+        con.ConnectionString = "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=tray;Integrated Security=True"
+        con.Open()
+        cmd = New SqlCommand(" UPDATE crud SET WHERE id = '" & TextBox1.Text & "', name = '" & TextBox2.Text & "', email = '" & TextBox3.Text & "', password = '" & TextBox4.Text & "' ", con)
+        Try
+            cmd.ExecuteNonQuery()
+            MsgBox("data updeted")
+            con.Close()
+        Catch ex As Exception
+            MsgBox("id not match")
+            con.Close()
+        End Try
+    End Sub
+
+delete
+
+Protected Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        Dim con As New SqlConnection
+        Dim cmd As New SqlCommand
+        con.ConnectionString = "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=tray;Integrated Security=True"
+        con.Open()
+        cmd = New SqlCommand(" DELETE FROM crud WHERE id = '" & TextBox1.Text & "' ", con)
+        Try
+            cmd.ExecuteNonQuery()
+            MsgBox("data deleted")
+            con.Close()
+        Catch ex As Exception
+            MsgBox("id not found")
+            con.Close()
+        End Try
+    End Sub
